@@ -1,115 +1,132 @@
-let currentData = [...masterData];
-let currentIndex = 0;
-let wordRevealed = false;
+let currentList = [];
+    let index = 0;
+    let isRevealed = false;
 
-// Create filter buttons dynamically based on topics in masterData
-function createCategoryButtons() {
-  const container = document.getElementById('filter-container');
-  if (!container) return;
-  container.innerHTML = '';
+    // Initialize the application
+    function init() {
+      createFilters();
+      filterData('All Words');
+    }
 
-  const topics = [...new Set(masterData.map(item => item.topic))];
-  
-  const allBtn = document.createElement('button');
-  allBtn.className = 'filter-btn active';
-  allBtn.innerText = 'All Words';
-  allBtn.onclick = () => filterData('All');
-  container.appendChild(allBtn);
+    // Generate topic buttons dynamically
+    function createFilters() {
+      const container = document.getElementById('topic-filters');
+      const topics = [...new Set(masterData.map(item => item.topic))];
+      
+      container.innerHTML = `<button class="btn-topic active" onclick="filterData('All Words', this)">All Words</button>`;
+      
+      topics.forEach(t => {
+        const btn = document.createElement('button');
+        btn.className = 'btn-topic';
+        btn.innerText = t;
+        btn.onclick = () => filterData(t, btn);
+        container.appendChild(btn);
+      });
+    }
 
-  topics.forEach(topic => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-btn';
-    btn.innerText = topic;
-    btn.onclick = () => filterData(topic);
-    container.appendChild(btn);
-  });
-}
+    // Filter cards based on selected category
+    function filterData(topic, btnElement = null) {
+      if(btnElement) {
+        document.querySelectorAll('.btn-topic').forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
+      }
 
-function loadCard(index) {
-  if (currentData.length === 0) return;
-  const wordObj = currentData[index];
-  
-  document.getElementById('card-counter').innerText = `${index + 1} of ${currentData.length}`;
-  document.getElementById('bottom-counter').innerText = `${index + 1} / ${currentData.length}`;
-  document.getElementById('card-topic').innerText = wordObj.topic;
-  
-  wordRevealed = false;
-  const display = document.getElementById('word-display');
-  display.innerText = "👁️ Tap to reveal spelling";
-  display.className = "word-display word-hidden";
+      if (topic === 'All Words') {
+        currentList = [...masterData];
+      } else {
+        currentList = masterData.filter(item => item.topic === topic);
+      }
+      
+      index = 0;
+      renderCard();
+    }
 
-  resetBox('pos', 'PART OF SPEECH', '🧩');
-  resetBox('def', 'DEFINITION', '📖');
-  resetBox('sen', 'SENTENCE', '💬');
-}
+    // Display the current card
+    function renderCard() {
+      if (currentList.length === 0) return;
+      const word = currentList[index];
+      
+      // Update counters and labels
+      document.getElementById('counter').innerText = `${index + 1} of ${currentList.length}`;
+      document.getElementById('progress-text').innerText = `${index + 1} / ${currentList.length}`;
+      document.getElementById('current-topic').innerText = word.topic;
+      
+      // Reset Spelling Reveal State
+      isRevealed = false;
+      const sBox = document.getElementById('spelling-box');
+      sBox.innerText = "👁️ Tap to reveal spelling";
+      sBox.className = "spelling-reveal spelling-hidden";
 
-function resetBox(type, defaultText, icon) {
-  const box = document.getElementById(`box-${type}`);
-  box.classList.remove('revealed');
-  box.innerHTML = `<div class="toggle-icon">${icon}</div><div class="toggle-text">${defaultText}</div>`;
-}
+      // Reset Clue Boxes
+      resetClue('pos', '🧩', 'PART OF SPEECH');
+      resetClue('def', '📖', 'MEANING');
+      resetClue('sen', '💬', 'SENTENCE');
+    }
 
-function revealWord() {
-  if (!wordRevealed) {
-    document.getElementById('word-display').innerText = currentData[currentIndex].word;
-    document.getElementById('word-display').className = "word-display";
-    wordRevealed = true;
-  }
-}
+    // Helper to reset individual clue boxes
+    function resetClue(id, icon, label) {
+      const el = document.getElementById(`clue-${id}`);
+      el.classList.remove('revealed');
+      el.innerHTML = `<div class="clue-icon">${icon}</div><div>${label}</div>`;
+    }
 
-function revealInfo(type) {
-  const wordObj = currentData[currentIndex];
-  const box = document.getElementById(`box-${type}`);
-  if (!box.classList.contains('revealed')) {
-    box.classList.add('revealed');
-    if (type === 'pos') box.innerHTML = `<strong>${wordObj.pos}</strong>`;
-    else if (type === 'def') box.innerHTML = `<span>${wordObj.def}</span>`;
-    else if (type === 'sen') box.innerHTML = `<em>"${wordObj.sen}"</em>`;
-  }
-}
+    // Reveal specific clue (Part of Speech, Definition, Sentence)
+    function revealClue(type) {
+      const word = currentList[index];
+      const el = document.getElementById(`clue-${type}`);
+      
+      if (!el.classList.contains('revealed')) {
+        el.classList.add('revealed');
+        if (type === 'pos') el.innerHTML = `<strong style="color: #2980b9; text-transform: uppercase;">${word.pos}</strong>`;
+        if (type === 'def') el.innerHTML = `<span>${word.def}</span>`;
+        if (type === 'sen') el.innerHTML = `<em style="font-size: 0.85rem">"${word.sen}"</em>`;
+      }
+    }
 
-function playAudio(speed) {
-  window.speechSynthesis.cancel(); 
-  const utterance = new SpeechSynthesisUtterance(currentData[currentIndex].word);
-  utterance.lang = 'en-GB'; 
-  utterance.rate = speed; 
-  window.speechSynthesis.speak(utterance);
-}
+    // Reveal the actual spelling of the word
+    function revealSpelling() {
+      if(!isRevealed) {
+        const sBox = document.getElementById('spelling-box');
+        sBox.innerText = currentList[index].word;
+        sBox.classList.remove('spelling-hidden');
+        isRevealed = true;
+      }
+    }
 
-function nextCard() {
-  if (currentIndex < currentData.length - 1) {
-    currentIndex++;
-    loadCard(currentIndex);
-  } else {
-    alert("Deck completed!");
-  }
-}
+    // Text-to-Speech functionality (British English)
+    function speak(rate) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(currentList[index].word);
+      utterance.lang = 'en-GB'; // British English for Eurasia Spelling Bee
+      utterance.rate = rate; // 1 for normal, 0.6 for slow
+      window.speechSynthesis.speak(utterance);
+    }
 
-function prevCard() {
-  if (currentIndex > 0) {
-    currentIndex--;
-    loadCard(currentIndex);
-  }
-}
+    // Navigation: Next
+    function nextWord() {
+      if (index < currentList.length - 1) {
+        index++;
+        renderCard();
+      } else {
+        alert("🎉 You've reached the end of this list!");
+      }
+    }
 
-function shuffleCards() {
-  currentData.sort(() => Math.random() - 0.5);
-  currentIndex = 0;
-  loadCard(currentIndex);
-}
+    // Navigation: Previous
+    function prevWord() {
+      if (index > 0) {
+        index--;
+        renderCard();
+      }
+    }
 
-function filterData(topic) {
-  const buttons = document.querySelectorAll('.filter-btn');
-  buttons.forEach(btn => {
-    btn.classList.toggle('active', btn.innerText === topic || (topic === 'All' && btn.innerText === 'All Words'));
-  });
+    // Shuffle the current deck
+    function shuffleCards() {
+      currentList.sort(() => Math.random() - 0.5);
+      index = 0;
+      renderCard();
+    }
 
-  currentData = (topic === 'All') ? [...masterData] : masterData.filter(item => item.topic === topic);
-  currentIndex = 0;
-  loadCard(currentIndex);
-}
-
-window.onload = () => {
-  createCategoryButtons();
-  loadCard(currentIndex);
-};
+    // Start the app when the window loads
+    window.onload = init;
+  </script>
