@@ -1,5 +1,5 @@
 const masterData = [
-  // CATEGORY: GENERAL A-Z (Extracted from PDF)
+  
   { topic: "General", word: "a/an", pos: "determiner", def: "Used before a noun to refer to one thing.", sen: "I saw a cat in the garden." },
   { topic: "General", word: "a few", pos: "determiner", def: "A small number of people or things.", sen: "I have a few questions for you." },
   { topic: "Feelings & Opinions", word: "able", pos: "adjective", def: "Having the power or skill to do something.", sen: "Will you be able to come to the party?" },
@@ -75,18 +75,18 @@ const masterData = [
   { topic: "Feelings & Opinions", word: "awesome", pos: "adjective", def: "Very impressive.", sen: "That movie was awesome." },
   { topic: "Feelings & Opinions", word: "awful", pos: "adjective", def: "Very bad or unpleasant.", sen: "The weather was awful." },
 
-  // CATEGORY: NAMES
+  
   { topic: "Names", word: "Betty", pos: "proper noun", def: "A common female given name.", sen: "Betty is practicing her spelling today." },
   { topic: "Names", word: "David", pos: "proper noun", def: "A common male given name.", sen: "David is the winner of the last round." },
   { topic: "Names", word: "Sophia", pos: "proper noun", def: "A common female given name.", sen: "Sophia represents her school in the bee." },
   { topic: "Names", word: "Oliver", pos: "proper noun", def: "A common male given name.", sen: "Oliver spelled the word correctly." },
 
-  // CATEGORY: CLOTHES
+  
   { topic: "Clothes & Accessories", word: "blouse", pos: "noun", def: "A shirt-like garment worn by women.", sen: "She wore a white blouse for the ceremony." },
   { topic: "Clothes & Accessories", word: "trainers", pos: "noun", def: "Sports shoes (US: sneakers).", sen: "He put on his trainers for gym class." },
   { topic: "Clothes & Accessories", word: "jewellery", pos: "noun", def: "Items like rings and necklaces worn for decoration.", sen: "The shop sells handmade silver jewellery." },
 
-  // CATEGORY: TRAVEL
+  
   { topic: "Travel & Transport", word: "ambulance", pos: "noun", def: "A vehicle for taking sick people to hospital.", sen: "The ambulance arrived with its sirens on." },
   { topic: "Travel & Transport", word: "passenger", pos: "noun", def: "A person traveling in a vehicle.", sen: "The bus passenger waited for their stop." },
   { topic: "Travel & Transport", word: "journey", pos: "noun", def: "An act of traveling from one place to another.", sen: "It was a long journey across the country." }
