@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eurasia Spelling Bee - Self Study</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7f6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .vocab-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .word-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #ecf0f1;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+    .word-header h3 {
+      margin: 0;
+      font-size: 24px;
+      text-transform: capitalize;
+      color: #2980b9;
+    }
+    .badge {
+      background: #e74c3c;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .button-group button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      margin-right: 5px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+    .button-group button:hover {
+      background-color: #2980b9;
+    }
+    .info-group {
+      margin-top: 15px;
+    }
+    .info-text {
+      background: #ecf0f1;
+      padding: 10px;
+      border-left: 4px solid #3498db;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Spelling Bee Vocabulary Builder</h1>
+  <div id="vocab-container"></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  
+</body>
+</html>
