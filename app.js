@@ -1,68 +1,133 @@
-let currentIndex = 0;
-let currentData = [...vocabData]; // Creates a copy of your data array
 
-// Function to load a card onto the screen
-function loadCard(index) {
-  const wordObj = currentData[index];
-  
-  // Update Counters & Headers
-  document.getElementById('card-counter').innerText = `${index + 1} of ${currentData.length}`;
-  document.getElementById('bottom-counter').innerText = `${index + 1} / ${currentData.length}`;
-  document.getElementById('card-topic').innerText = wordObj.topic;
-  
-  // Update Word
-  document.getElementById('word-display').innerText = wordObj.word;
+    let currentData = [...masterData];
+    let currentIndex = 0;
+    let wordRevealed = false;
 
-  // Reset the toggle boxes back to default text
-  document.getElementById('box-pos').innerHTML = 'PART OF SPEECH';
-  document.getElementById('box-def').innerHTML = 'DEFINITION';
-  document.getElementById('box-sen').innerHTML = 'SENTENCE';
-}
+    // Load a card into the UI
+    function loadCard(index) {
+      const wordObj = currentData[index];
+      
+      // Update Counters & Topics
+      document.getElementById('card-counter').innerText = `${index + 1} of ${currentData.length}`;
+      document.getElementById('bottom-counter').innerText = `${index + 1} / ${currentData.length}`;
+      document.getElementById('card-topic').innerText = wordObj.topic;
+      
+      // Hide the word initially
+      wordRevealed = false;
+      const wordDisplay = document.getElementById('word-display');
+      wordDisplay.innerText = "👁️ Tap to reveal spelling";
+      wordDisplay.className = "word-display word-hidden";
 
-// Function to reveal text when a box is clicked
-function reveal(type) {
-  const wordObj = currentData[currentIndex];
-  
-  if (type === 'pos') {
-    document.getElementById('box-pos').innerHTML = `<strong>${wordObj.partOfSpeech}</strong>`;
-  } else if (type === 'def') {
-    document.getElementById('box-def').innerHTML = wordObj.definition;
-  } else if (type === 'sen') {
-    document.getElementById('box-sen').innerHTML = `<em>"${wordObj.sentence}"</em>`;
-  }
-}
+      // Reset info boxes
+      resetBox('pos', 'PART OF SPEECH', '🧩');
+      resetBox('def', 'DEFINITION', '📖');
+      resetBox('sen', 'SENTENCE', '💬');
+    }
 
-// Text-to-Speech Audio (British English)
-function playAudio() {
-  const word = currentData[currentIndex].word;
-  const utterance = new SpeechSynthesisUtterance(word);
-  utterance.lang = 'en-GB'; // Forces British English pronunciation
-  utterance.rate = 0.85; // Slightly slower so students hear it clearly
-  window.speechSynthesis.speak(utterance);
-}
+    function resetBox(type, defaultText, icon) {
+      const box = document.getElementById(`box-${type}`);
+      box.classList.remove('revealed');
+      box.innerHTML = `<div class="toggle-icon">${icon}</div><div class="toggle-text">${defaultText}</div>`;
+    }
 
-// Navigation Functions
-function nextCard() {
-  if (currentIndex < currentData.length - 1) {
-    currentIndex++;
-    loadCard(currentIndex);
-  } else {
-    alert("You've reached the end of the deck!");
-  }
-}
+    // Reveal the spelling
+    function revealWord() {
+      if (!wordRevealed) {
+        const wordObj = currentData[currentIndex];
+        const wordDisplay = document.getElementById('word-display');
+        wordDisplay.innerText = wordObj.word;
+        wordDisplay.className = "word-display"; // Removes the hidden styling
+        wordRevealed = true;
+      }
+    }
 
-function prevCard() {
-  if (currentIndex > 0) {
-    currentIndex--;
-    loadCard(currentIndex);
-  }
-}
+    // Reveal Info Boxes (POS, Def, Sen)
+    function revealInfo(type) {
+      const wordObj = currentData[currentIndex];
+      const box = document.getElementById(`box-${type}`);
+      
+      // Only change if not already revealed
+      if (!box.classList.contains('revealed')) {
+        box.classList.add('revealed');
+        if (type === 'pos') {
+          box.innerHTML = `<strong style="text-transform: uppercase; color: #2980b9;">${wordObj.pos}</strong>`;
+        } else if (type === 'def') {
+          box.innerHTML = `<span style="color: #444;">${wordObj.def}</span>`;
+        } else if (type === 'sen') {
+          box.innerHTML = `<em style="color: #444;">"${wordObj.sen}"</em>`;
+        }
+      }
+    }
 
-function shuffleCards() {
-  currentData.sort(() => Math.random() - 0.5);
-  currentIndex = 0;
-  loadCard(currentIndex);
-}
+    // Text to Speech
+    function playAudio(speed) {
+      // Browsers restrict speech synthesis if it's called too rapidly, cancel previous
+      window.speechSynthesis.cancel(); 
 
-// Initialize the first card when the page loads
-loadCard(currentIndex);
+      const wordObj = currentData[currentIndex];
+      const utterance = new SpeechSynthesisUtterance(wordObj.word);
+      
+      utterance.lang = 'en-GB'; // British English for Eurasia Spelling Bee
+      utterance.rate = speed; // 1 for normal, 0.5 for slow
+      
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Navigation
+    function nextCard() {
+      if (currentIndex < currentData.length - 1) {
+        currentIndex++;
+        loadCard(currentIndex);
+      } else {
+        alert("🎉 You've reached the end of this deck!");
+      }
+    }
+
+    function prevCard() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        loadCard(currentIndex);
+      }
+    }
+
+    // Shuffling
+    function shuffleCards() {
+      currentData.sort(() => Math.random() - 0.5);
+      currentIndex = 0;
+      loadCard(currentIndex);
+    }
+
+    // Filtering
+    function filterData(topicName) {
+      // Update UI buttons
+      const buttons = document.querySelectorAll('.filter-btn');
+      buttons.forEach(btn => {
+        if(btn.innerText === topicName || (topicName === 'All' && btn.innerText === 'All Topics') || btn.innerText.includes(topicName.split(' ')[0])) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      // Filter array
+      if (topicName === 'All') {
+        currentData = [...masterData];
+      } else {
+        currentData = masterData.filter(item => item.topic === topicName);
+      }
+
+      currentIndex = 0;
+      if (currentData.length > 0) {
+        loadCard(currentIndex);
+      } else {
+        document.getElementById('word-display').innerText = "No words found.";
+      }
+    }
+
+    // Initialize first card
+    window.onload = () => {
+      loadCard(currentIndex);
+    };
+  </script>
+</body>
+</html>
