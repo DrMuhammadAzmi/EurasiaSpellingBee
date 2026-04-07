@@ -3,85 +3,215 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eurasia Spelling Bee - Self Study</title>
+  <title>Eurasia Spelling Bee Flashcards</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f7f6;
-      color: #333;
-      max-width: 800px;
-      margin: 0 auto;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      color: #555;
+      margin: 0;
       padding: 20px;
+      display: flex;
+      justify-content: center;
     }
-    h1 {
-      text-align: center;
-      color: #2c3e50;
+    .app-container {
+      width: 100%;
+      max-width: 700px;
     }
-    .vocab-card {
-      background: white;
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 15px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    .word-header {
+    /* Header & Navigation */
+    .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 2px solid #ecf0f1;
-      padding-bottom: 10px;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
     }
-    .word-header h3 {
-      margin: 0;
-      font-size: 24px;
-      text-transform: capitalize;
-      color: #2980b9;
-    }
-    .badge {
-      background: #e74c3c;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 12px;
+    .btn-header {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      color: #555;
       font-weight: bold;
     }
-    .button-group button {
-      background-color: #3498db;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      margin-right: 5px;
-      border-radius: 4px;
+    .filters {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+    .filter-btn {
+      background: transparent;
+      border: 1px solid #ccc;
+      padding: 6px 16px;
+      border-radius: 20px;
       cursor: pointer;
+      color: #777;
+    }
+    .filter-btn.active {
+      background: #eef5ff;
+      border-color: #3498db;
+      color: #3498db;
+    }
+    /* Main Card */
+    .flashcard {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      color: #999;
       font-size: 14px;
-      transition: background 0.3s;
+      margin-bottom: 20px;
     }
-    .button-group button:hover {
-      background-color: #2980b9;
+    .badge {
+      background: #f4f4f4;
+      padding: 4px 12px;
+      border-radius: 12px;
     }
-    .info-group {
-      margin-top: 15px;
+    /* Listen Section */
+    .listen-section {
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 20px;
     }
-    .info-text {
-      background: #ecf0f1;
-      padding: 10px;
-      border-left: 4px solid #3498db;
-      border-radius: 4px;
-      margin-top: 10px;
+    .word-display {
+      font-size: 32px;
+      color: #333;
+      margin-bottom: 15px;
+      font-weight: bold;
+      text-transform: capitalize;
     }
-    .hidden {
-      display: none;
+    .btn-listen {
+      background: #eef5ff;
+      color: #2980b9;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    /* Toggle Boxes */
+    .toggles {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .toggle-box {
+      flex: 1;
+      border: 1px dashed #ccc;
+      border-radius: 8px;
+      padding: 20px 10px;
+      text-align: center;
+      cursor: pointer;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #777;
+      transition: background 0.2s;
+    }
+    .toggle-box:hover {
+      background: #f9f9f9;
+    }
+    /* Assessment Buttons */
+    .assessment {
+      display: flex;
+      gap: 15px;
+    }
+    .btn-incorrect {
+      flex: 1;
+      background: #ffebeb;
+      color: #d9534f;
+      border: none;
+      padding: 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .btn-correct {
+      flex: 1;
+      background: #e6f9ec;
+      color: #2ecc71;
+      border: none;
+      padding: 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    /* Footer Navigation */
+    .footer-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .footer-nav button {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <h1>Spelling Bee Vocabulary Builder</h1>
-  <div id="vocab-container"></div>
+  <div class="app-container">
+    
+    <div class="header">
+      <button class="btn-header">🏠 Home</button>
+      <h2 style="margin: 0; font-size: 20px; color: #555;">Spelling Bee Flashcards</h2>
+      <button class="btn-header" onclick="shuffleCards()">🔀 Shuffle</button>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active">All Topics</button>
+      <button class="filter-btn">Clothes & Accessories</button>
+      </div>
+
+    <div class="flashcard">
+      <div class="card-header">
+        <span id="card-counter">1 of 14</span>
+        <span class="badge" id="card-topic">Topic 3</span>
+      </div>
+
+      <div class="listen-section">
+        <div class="word-display" id="word-display">Word</div>
+        <button class="btn-listen" onclick="playAudio()">🔊 Listen</button>
+      </div>
+
+      <div class="toggles">
+        <div class="toggle-box" onclick="reveal('pos')" id="box-pos">PART OF SPEECH</div>
+        <div class="toggle-box" onclick="reveal('def')" id="box-def">DEFINITION</div>
+        <div class="toggle-box" onclick="reveal('sen')" id="box-sen">SENTENCE</div>
+      </div>
+
+      <div class="assessment">
+        <button class="btn-incorrect" onclick="nextCard()">❌ Incorrect</button>
+        <button class="btn-correct" onclick="nextCard()">✅ Correct</button>
+      </div>
+    </div>
+
+    <div class="footer-nav">
+      <button onclick="prevCard()">← Prev</button>
+      <span id="bottom-counter">1 / 14</span>
+      <button onclick="nextCard()">Next →</button>
+    </div>
+
+  </div>
 
   <script src="data.js"></script>
   <script src="app.js"></script>
-  
 </body>
 </html>
