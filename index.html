@@ -1,334 +1,444 @@
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eurasia Spelling Bee Trainer</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spelling Bee Prep</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Space+Mono:wght@700&display=swap" rel="stylesheet" />
   <style>
+    /* ── Reset & base ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --primary: #2980b9;
-      --bg: #f0f4f8;
-      --card-bg: #ffffff;
-      --text: #334455;
-      --muted: #8899aa;
-      --border: #dbe2e8;
+      --blue:        #2563EB;
+      --blue-dark:   #1D4ED8;
+      --blue-light:  #DBEAFE;
+      --blue-muted:  #EFF6FF;
+      --amber:       #D97706;
+      --amber-light: #FEF3C7;
+      --red:         #DC2626;
+      --red-light:   #FEF2F2;
+      --green:       #16A34A;
+      --green-light: #F0FDF4;
+      --gray-50:     #F9FAFB;
+      --gray-100:    #F3F4F6;
+      --gray-200:    #E5E7EB;
+      --gray-400:    #9CA3AF;
+      --gray-600:    #4B5563;
+      --gray-800:    #1F2937;
+      --radius-sm:   8px;
+      --radius-md:   14px;
+      --radius-lg:   20px;
+      --shadow-sm:   0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md:   0 4px 16px rgba(0,0,0,.10), 0 2px 4px rgba(0,0,0,.06);
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
+      font-family: 'Nunito', sans-serif;
+      background: var(--gray-100);
       min-height: 100vh;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 650px;
-    }
-
-    /* Header Section */
-    .app-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .app-header h1 {
-      font-size: 1.2rem;
-      margin: 0;
-      color: var(--primary);
-    }
-
-    .nav-btn {
-      background: white;
-      border: 1px solid var(--border);
-      padding: 8px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: 600;
-      color: var(--text);
-      transition: all 0.2s;
-    }
-
-    .nav-btn:hover { background: #f8f9fa; }
-
-    /* Category Filters */
-    .filter-bar {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding-bottom: 12px;
-      margin-bottom: 20px;
-      scrollbar-width: thin;
-    }
-
-    .filter-bar::-webkit-scrollbar { height: 6px; }
-    .filter-bar::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
-
-    .btn-topic {
-      background: white;
-      border: 1px solid var(--border);
-      padding: 8px 18px;
-      border-radius: 20px;
-      white-space: nowrap;
-      cursor: pointer;
-      color: var(--muted);
-      font-size: 0.9rem;
-      transition: all 0.2s;
-    }
-
-    .btn-topic.active {
-      background: #eef5ff;
-      border-color: var(--primary);
-      color: var(--primary);
-      font-weight: bold;
-    }
-
-    /* Main Flashcard */
-    .card {
-      background: var(--card-bg);
-      border-radius: 24px;
-      padding: 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    }
-
-    .card-meta {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 25px;
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    .topic-tag {
-      background: #f1f3f5;
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-weight: bold;
-    }
-
-    /* Interaction Steps */
-    .step-box {
-      background: #fafbfc;
-      border: 1px solid #f0f2f5;
-      border-radius: 16px;
-      padding: 25px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .label {
-      font-size: 0.75rem;
-      font-weight: 800;
-      color: #f39c12;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 15px;
-      display: block;
-    }
-
-    .audio-controls {
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
-    .btn-main-listen {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 16px 40px;
-      border-radius: 50px;
-      font-size: 1.5rem;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(41, 128, 185, 0.3);
-      width: 80%;
-      max-width: 280px;
-      transition: transform 0.1s;
+    /* ── Top bar ──────────────────────────────────────────── */
+    .topbar {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px 0;
     }
-    .btn-main-listen:active { transform: scale(0.95); }
+    .topbar-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--blue);
+      letter-spacing: -0.3px;
+    }
+    .topbar-title span { color: var(--amber); }
+
+    .btn-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1.5px solid var(--gray-200);
+      background: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gray-600);
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+    .btn-pill:hover { background: var(--gray-100); border-color: var(--gray-400); }
+    .btn-pill svg { width: 15px; height: 15px; }
+
+    /* ── Progress bar ─────────────────────────────────────── */
+    .progress-track {
+      width: 100%;
+      max-width: 520px;
+      height: 4px;
+      background: var(--gray-200);
+      border-radius: 999px;
+      margin: 12px 16px 0;
+      overflow: hidden;
+    }
+    #progress-bar {
+      height: 100%;
+      background: var(--blue);
+      border-radius: 999px;
+      transition: width .4s ease;
+      width: 0%;
+    }
+
+    /* ── Meta row (counter + topic + filter) ──────────────── */
+    .meta-row {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px 0;
+    }
+    .meta-left { display: flex; align-items: center; gap: 8px; }
+    #counter { font-size: 13px; font-weight: 700; color: var(--gray-400); }
+    #topic-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--amber-light);
+      color: var(--amber);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      display: none;
+    }
+
+    select#topic-filter {
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gray-600);
+      border: 1.5px solid var(--gray-200);
+      border-radius: 999px;
+      background: #fff;
+      padding: 4px 10px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* ── Main card area ───────────────────────────────────── */
+    #card-area {
+      width: 100%;
+      max-width: 520px;
+      padding: 12px 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: 20px;
+    }
+
+    /* ── Step label ───────────────────────────────────────── */
+    .step-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 14px;
+    }
+
+    /* ── Listen button ────────────────────────────────────── */
+    .btn-listen {
+      width: 100%;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      border: none;
+      background: var(--blue);
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: background .15s, transform .1s;
+    }
+    .btn-listen:hover { background: var(--blue-dark); }
+    .btn-listen:active { transform: scale(.98); }
+    .btn-listen svg { width: 24px; height: 24px; }
 
     .btn-slow {
-      background: none;
-      border: 1px solid #ccc;
-      margin-top: 10px;
-      padding: 6px 20px;
-      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin: 10px auto 0;
+      padding: 7px 20px;
+      border-radius: 999px;
+      border: 1.5px solid var(--gray-200);
+      background: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gray-600);
       cursor: pointer;
-      font-size: 0.8rem;
-      color: var(--muted);
-      transition: background 0.2s;
+      transition: background .15s;
     }
-    .btn-slow:hover { background: #eee; }
+    .btn-slow:hover { background: var(--gray-100); }
 
-    /* Clue Grid */
-    .clue-grid {
+    /* ── Info panels ──────────────────────────────────────── */
+    .info-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 20px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
     }
 
-    @media (max-width: 450px) {
-      .clue-grid { grid-template-columns: 1fr; }
-    }
-
-    .clue-item {
-      border: 1px dashed #ccd5db;
-      border-radius: 12px;
-      padding: 15px 10px;
+    .info-panel {
+      border: 1.5px dashed var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 14px 10px 12px;
       text-align: center;
       cursor: pointer;
-      min-height: 80px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      font-size: 0.8rem;
-      background: #fff;
-      color: var(--muted);
-      transition: background 0.2s;
-    }
-
-    .clue-item:hover { background: #f9f9f9; border-color: #aaa; }
-
-    .clue-item.revealed {
-      border-style: solid;
-      border-color: var(--primary);
-      color: var(--text);
-      background: #fff;
-    }
-
-    .clue-icon { font-size: 1.5rem; margin-bottom: 5px; opacity: 0.8; }
-
-    /* Spelling Reveal */
-    .spelling-reveal {
-      font-size: 2.2rem;
-      font-weight: 800;
-      min-height: 60px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      text-transform: capitalize;
-    }
-
-    .spelling-hidden {
-      font-size: 1rem;
-      background: #eee;
-      color: #999;
-      padding: 12px 30px;
-      border-radius: 12px;
-      text-transform: none;
+      transition: border-color .15s, background .15s;
       user-select: none;
     }
+    .info-panel:hover { border-color: var(--blue); background: var(--blue-muted); }
+    .info-panel.open  { border-style: solid; border-color: var(--blue); background: var(--blue-muted); }
 
-    /* Assessment */
-    .action-row {
-      display: flex;
-      gap: 15px;
-      margin-top: 20px;
+    .info-icon { font-size: 22px; line-height: 1; margin-bottom: 6px; }
+    .info-label {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gray-400);
+      margin-bottom: 6px;
+    }
+    .info-value {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-800);
+      line-height: 1.4;
+      min-height: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .3s ease, opacity .2s;
+      opacity: 0;
+    }
+    .info-panel.open .info-value {
+      max-height: 200px;
+      opacity: 1;
     }
 
-    .btn-action {
-      flex: 1;
-      border: none;
-      padding: 18px;
-      border-radius: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: opacity 0.2s;
-    }
-    .btn-action:hover { opacity: 0.8; }
-
-    .btn-wrong { background: #ffebeb; color: #e74c3c; }
-    .btn-right { background: #e6f9ec; color: #27ae60; }
-
-    /* Footer */
-    .footer {
+    /* ── Reveal box ───────────────────────────────────────── */
+    #reveal-box {
+      border-radius: var(--radius-md);
+      background: var(--gray-100);
+      min-height: 64px;
       display: flex;
-      justify-content: center;
       align-items: center;
-      gap: 25px;
-      margin-top: 25px;
+      justify-content: center;
+      cursor: pointer;
+      transition: background .2s;
+      user-select: none;
+    }
+    #reveal-box:hover { background: var(--gray-200); }
+    #reveal-box.revealed { background: var(--blue-light); cursor: default; }
+
+    .reveal-hint {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gray-400);
+    }
+    .reveal-hint span { font-size: 18px; }
+
+    #reveal-word {
+      font-family: 'Space Mono', monospace;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--blue-dark);
+      letter-spacing: 2px;
+      display: none;
+    }
+
+    /* ── Result buttons ───────────────────────────────────── */
+    .result-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-result {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      border: none;
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform .1s, opacity .15s;
+    }
+    .btn-result:active { transform: scale(.97); }
+    .btn-result.flash { opacity: .5; transform: scale(.95); }
+
+    #btn-incorrect {
+      background: var(--red-light);
+      color: var(--red);
+    }
+    #btn-incorrect:hover { background: #FEE2E2; }
+
+    #btn-correct {
+      background: var(--green-light);
+      color: var(--green);
+    }
+    #btn-correct:hover { background: #DCFCE7; }
+
+    /* ── Finish screen ────────────────────────────────────── */
+    #finish-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .finish-emoji { font-size: 56px; }
+    .finish-title { font-size: 26px; font-weight: 800; color: var(--gray-800); }
+    .finish-sub { font-size: 15px; color: var(--gray-400); font-weight: 600; }
+    .btn-restart {
+      margin-top: 8px;
+      padding: 14px 36px;
+      border-radius: 999px;
+      border: none;
+      background: var(--blue);
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .btn-restart:hover { background: var(--blue-dark); }
+
+    /* ── Responsive ───────────────────────────────────────── */
+    @media (max-width: 400px) {
+      .info-grid { gap: 8px; }
+      #reveal-word { font-size: 22px; }
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <!-- Header -->
-    <header class="app-header">
-      <button class="nav-btn" onclick="location.reload()">🏠 Home</button>
-      <h1>Spelling Bee Prep</h1>
-      <button class="nav-btn" onclick="shuffleCards()">🔀 Shuffle</button>
-    </header>
-
-    <!-- Dynamic Filter Bar -->
-    <nav class="filter-bar" id="topic-filters">
-      <!-- Buttons are generated automatically here -->
-    </nav>
-
-    <!-- Main Flashcard Area -->
-    <main class="card">
-      <div class="card-meta">
-        <span id="counter">Loading...</span>
-        <span class="topic-tag" id="current-topic">Topic</span>
-      </div>
-
-      <!-- Step 1: Listen First -->
-      <section class="step-box">
-        <span class="label">Step 1 — Listen Carefully</span>
-        <div class="audio-controls">
-          <button class="btn-main-listen" onclick="speak(1)">🔊 Listen</button>
-          <button class="btn-slow" onclick="speak(0.6)">🐌 Slow</button>
-        </div>
-      </section>
-
-      <!-- Clues Middle Section -->
-      <section class="clue-grid">
-        <div class="clue-item" id="clue-pos" onclick="revealClue('pos')">
-          <div class="clue-icon">🧩</div>
-          <div>PART OF SPEECH</div>
-        </div>
-        <div class="clue-item" id="clue-def" onclick="revealClue('def')">
-          <div class="clue-icon">📖</div>
-          <div>MEANING</div>
-        </div>
-        <div class="clue-item" id="clue-sen" onclick="revealClue('sen')">
-          <div class="clue-icon">💬</div>
-          <div>SENTENCE</div>
-        </div>
-      </section>
-
-      <!-- Step 2: Reveal Spelling Bottom Section -->
-      <section class="step-box">
-        <span class="label">Step 2 — Reveal Spelling</span>
-        <div class="spelling-reveal spelling-hidden" id="spelling-box" onclick="revealSpelling()">
-          👁️ Tap to reveal spelling
-        </div>
-      </section>
-
-      <!-- Correct / Incorrect Assessment -->
-      <div class="action-row">
-        <button class="btn-action btn-wrong" onclick="nextWord()">❌ Incorrect</button>
-        <button class="btn-action btn-right" onclick="nextWord()">✅ Correct</button>
-      </div>
-    </main>
-
-    <!-- Footer Navigation -->
-    <footer class="footer">
-      <button class="nav-btn" onclick="prevWord()">← Prev</button>
-      <span id="progress-text" style="font-weight: 600; color: var(--muted);">0 / 0</span>
-      <button class="nav-btn" onclick="nextWord()">Next →</button>
-    </footer>
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="topbar-title">Spelling <span>Bee</span> Prep</div>
+    <button class="btn-pill" id="btn-shuffle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="16 3 21 3 21 8"/><polyline points="8 21 3 21 3 16"/>
+        <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+      </svg>
+      Shuffle
+    </button>
   </div>
-  </body>
+
+  <!-- Progress -->
+  <div class="progress-track"><div id="progress-bar"></div></div>
+
+  <!-- Meta -->
+  <div class="meta-row">
+    <div class="meta-left">
+      <span id="counter">— / —</span>
+      <span id="topic-badge"></span>
+    </div>
+    <select id="topic-filter">
+      <option value="all">All topics</option>
+    </select>
+  </div>
+
+  <!-- Card area -->
+  <div id="card-area">
+
+    <!-- Step 1: Listen -->
+    <div class="card">
+      <div class="step-label">Step 1 — Listen carefully</div>
+      <button class="btn-listen" onclick="listenNormal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+        Listen
+      </button>
+      <button class="btn-slow" onclick="listenSlow()">🐢 Slow</button>
+    </div>
+
+    <!-- Info panels -->
+    <div class="info-grid">
+      <div class="info-panel" id="pos-panel" onclick="togglePanel('pos')">
+        <div class="info-icon">🧩</div>
+        <div class="info-label">Part of speech</div>
+        <div class="info-value" id="pos-value"></div>
+      </div>
+      <div class="info-panel" id="meaning-panel" onclick="togglePanel('meaning')">
+        <div class="info-icon">📖</div>
+        <div class="info-label">Meaning</div>
+        <div class="info-value" id="meaning-value"></div>
+      </div>
+      <div class="info-panel" id="sentence-panel" onclick="togglePanel('sentence')">
+        <div class="info-icon">💬</div>
+        <div class="info-label">Sentence</div>
+        <div class="info-value" id="sentence-value"></div>
+      </div>
+    </div>
+
+    <!-- Step 2: Reveal -->
+    <div class="card">
+      <div class="step-label">Step 2 — Reveal spelling</div>
+      <div id="reveal-box" onclick="revealSpelling()">
+        <div class="reveal-hint"><span>👁</span> Tap to reveal spelling</div>
+        <div id="reveal-word"></div>
+      </div>
+    </div>
+
+    <!-- Result buttons -->
+    <div class="result-row">
+      <button class="btn-result" id="btn-incorrect" onclick="markResult(false)">✗ Incorrect</button>
+      <button class="btn-result" id="btn-correct"   onclick="markResult(true)">✓ Correct</button>
+    </div>
+
+  </div>
+
+  <!-- Finish screen -->
+  <div id="finish-screen">
+    <div class="finish-emoji">🎉</div>
+    <div class="finish-title">Round complete!</div>
+    <div class="finish-sub">You've gone through all the words.</div>
+    <button class="btn-restart" onclick="restartDeck()">Shuffle &amp; restart</button>
+  </div>
+
+  <!-- Data first, then app logic -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
 </html>
