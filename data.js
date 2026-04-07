@@ -1,93 +1,95 @@
-const masterData = [
-  
-  { topic: "General", word: "a/an", pos: "determiner", def: "Used before a noun to refer to one thing.", sen: "I saw a cat in the garden." },
-  { topic: "General", word: "a few", pos: "determiner", def: "A small number of people or things.", sen: "I have a few questions for you." },
-  { topic: "Feelings & Opinions", word: "able", pos: "adjective", def: "Having the power or skill to do something.", sen: "Will you be able to come to the party?" },
-  { topic: "General", word: "about", pos: "prep & adverb", def: "On the subject of; or approximately.", sen: "Tell me about your holiday." },
-  { topic: "General", word: "above", pos: "prep & adverb", def: "In a higher place than something else.", sen: "The clouds are above the mountains." },
-  { topic: "Health & Exercise", word: "accident", pos: "noun", def: "Something bad that happens that is not intended.", sen: "She had a small accident on her bike." },
-  { topic: "General", word: "across", pos: "prep & adverb", def: "From one side to the other.", sen: "The bridge goes across the river." },
-  { topic: "Entertainment", word: "act", pos: "verb", def: "To perform in a play or film.", sen: "He likes to act in school plays." },
-  { topic: "General", word: "action", pos: "noun", def: "The process of doing something.", sen: "We need to take action to save the environment." },
-  { topic: "General", word: "activity", pos: "noun", def: "Things that people do, especially for enjoyment.", sen: "Swimming is my favourite activity." },
-  { topic: "Entertainment", word: "actor", pos: "noun", def: "A person who acts in a play or movie.", sen: "The actor forgot his lines." },
-  { topic: "General", word: "actually", pos: "adverb", def: "Used to imply that something is true.", sen: "I actually like broccoli." },
-  { topic: "Documents & Media", word: "ad", pos: "noun", def: "Short for advertisement.", sen: "I saw an ad for a new phone." },
-  { topic: "General", word: "add", pos: "verb", def: "To join something to something else.", sen: "Please add some salt to the soup." },
-  { topic: "Technology", word: "address", pos: "noun", def: "The details of where a person lives.", sen: "What is your email address?" },
-  { topic: "General", word: "adult", pos: "noun", def: "A person who is fully grown.", sen: "Children must be with an adult." },
-  { topic: "Education", word: "advanced", pos: "adjective", def: "At a higher level.", sen: "He is in the advanced English class." },
-  { topic: "Entertainment", word: "adventure", pos: "noun", def: "An exciting or unusual experience.", sen: "They went on an adventure in the woods." },
-  { topic: "Documents & Media", word: "advert", pos: "noun", def: "Short for advertisement.", sen: "The advert for the car was funny." },
-  { topic: "Documents & Media", word: "advertisement", pos: "noun", def: "A notice to tell people about a product.", sen: "There were many advertisements on TV." },
-  { topic: "General", word: "advice", pos: "noun", def: "Suggestions about what someone should do.", sen: "My teacher gave me good advice." },
-  { topic: "Travel & Transport", word: "aeroplane", pos: "noun", def: "A vehicle that flies (UK spelling).", sen: "The aeroplane landed at the airport." },
-  { topic: "Feelings & Opinions", word: "afraid", pos: "adjective", def: "Feeling fear; scared.", sen: "I am afraid of spiders." },
-  { topic: "General", word: "after", pos: "prep & adverb", def: "Later than something.", sen: "We will go home after school." },
-  { topic: "Time", word: "afternoon", pos: "noun", def: "The time between noon and evening.", sen: "Let's play football this afternoon." },
-  { topic: "General", word: "afterwards", pos: "adverb", def: "At a later time.", sen: "We ate dinner and watched TV afterwards." },
-  { topic: "General", word: "again", pos: "adverb", def: "One more time.", sen: "Can you say that again, please?" },
-  { topic: "General", word: "against", pos: "preposition", def: "In opposition to.", sen: "He leaned against the wall." },
-  { topic: "General", word: "age", pos: "noun", def: "How old someone is.", sen: "What is the age of your brother?" },
-  { topic: "General", word: "aged", pos: "adjective", def: "Having a certain age.", sen: "They have a daughter aged five." },
-  { topic: "General", word: "ago", pos: "adverb", def: "Back in time from now.", sen: "I finished my lunch an hour ago." },
-  { topic: "General", word: "agree", pos: "verb", def: "To have the same opinion.", sen: "I agree with your idea." },
-  { topic: "The Natural World", word: "air", pos: "noun", def: "The mixture of gases we breathe.", sen: "The mountain air is very clean." },
-  { topic: "Travel & Transport", word: "airport", pos: "noun", def: "A place where planes take off.", sen: "The airport was very busy." },
-  { topic: "Appliances", word: "alarm clock", pos: "noun", def: "A clock that wakes you up.", sen: "My alarm clock rang at 7 o'clock." },
-  { topic: "General", word: "album", pos: "noun", def: "A collection of songs or photos.", sen: "The band released a new album." },
-  { topic: "General", word: "all", pos: "det & pronoun", def: "The whole quantity of.", sen: "I ate all the cookies." },
-  { topic: "General", word: "allow", pos: "verb", def: "To let someone do something.", sen: "My parents allow me to stay up late." },
-  { topic: "Feelings & Opinions", word: "amazed", pos: "adjective", def: "Extremely surprised.", sen: "I was amazed by the magic trick." },
-  { topic: "Feelings & Opinions", word: "amazing", pos: "adjective", def: "Very good or impressive.", sen: "The view from the top is amazing." },
-  { topic: "Health & Exercise", word: "ambulance", pos: "noun", def: "A vehicle for sick people.", sen: "The ambulance arrived quickly." },
-  { topic: "General", word: "among", pos: "preposition", def: "In the middle of or surrounded by.", sen: "The house is among the trees." },
-  { topic: "General", word: "an", pos: "determiner", def: "Used before a noun starting with a vowel.", sen: "I want an orange." },
-  { topic: "General", word: "and", pos: "conjunction", def: "Used to connect words.", sen: "I like tea and coffee." },
-  { topic: "Feelings & Opinions", word: "angry", pos: "adjective", def: "Feeling or showing strong annoyance.", sen: "He was angry because he lost the game." },
-  { topic: "General", word: "animal", pos: "noun", def: "A living creature that is not a plant.", sen: "The elephant is a large animal." },
-  { topic: "General", word: "another", pos: "det & pronoun", def: "One more person or thing.", sen: "Can I have another piece of cake?" },
-  { topic: "General", word: "answer", pos: "noun & verb", def: "A reaction to a question.", sen: "Do you know the answer?" },
-  { topic: "General", word: "any", pos: "det & pronoun", def: "Used to refer to one or some of a thing.", sen: "I don't have any money." },
-  { topic: "General", word: "anybody", pos: "pronoun", def: "Anyone.", sen: "Is anybody there?" },
-  { topic: "General", word: "anyone", pos: "pronoun", def: "Any person.", sen: "Anyone can learn to spell." },
-  { topic: "General", word: "anything", pos: "pronoun", def: "Any thing.", sen: "Is there anything in the box?" },
-  { topic: "General", word: "anywhere", pos: "adverb", def: "In or to any place.", sen: "I can't find my keys anywhere." },
-  { topic: "House & Home", word: "apartment", pos: "noun", def: "A flat or set of rooms to live in.", sen: "We live in a small apartment." },
-  { topic: "Technology", word: "app", pos: "noun", def: "Software for a phone or computer.", sen: "This app helps me learn English." },
-  { topic: "Food & Drink", word: "apple", pos: "noun", def: "A round fruit with red or green skin.", sen: "I eat an apple every day." },
-  { topic: "Health & Exercise", word: "appointment", pos: "noun", def: "A time to meet someone.", sen: "I have a dentist appointment." },
-  { topic: "General", word: "area", pos: "noun", def: "A part of a place.", sen: "The play area is for children." },
-  { topic: "Health & Exercise", word: "arm", pos: "noun", def: "The part of the body from shoulder to hand.", sen: "He hurt his arm playing tennis." },
-  { topic: "House & Home", word: "armchair", pos: "noun", def: "A comfortable chair with sides.", sen: "Grandpa sat in his favourite armchair." },
-  { topic: "General", word: "around", pos: "prep & adverb", def: "In a circle or near.", sen: "We walked around the lake." },
-  { topic: "General", word: "arrive", pos: "verb", def: "To reach a place.", sen: "What time did you arrive?" },
-  { topic: "Entertainment", word: "art", pos: "noun", def: "Paintings, drawings, and sculptures.", sen: "She is very good at art." },
-  { topic: "Entertainment", word: "artist", pos: "noun", def: "A person who creates art.", sen: "The artist painted a beautiful picture." },
-  { topic: "General", word: "as", pos: "conj & adverb", def: "Used to compare things.", sen: "She is as tall as her mother." },
-  { topic: "General", word: "ask", pos: "verb", def: "To request information.", sen: "Ask the teacher for help." },
-  { topic: "Shopping", word: "assistant", pos: "noun", def: "A person who helps customers.", sen: "The shop assistant was very kind." },
-  { topic: "General", word: "at", pos: "preposition", def: "Used to show a place or time.", sen: "I am at school." },
-  { topic: "Family & Friends", word: "aunt", pos: "noun", def: "The sister of your father or mother.", sen: "My aunt lives in London." },
-  { topic: "The Natural World", word: "autumn", pos: "noun", def: "The season after summer.", sen: "I love the colours of autumn." },
-  { topic: "General", word: "available", pos: "adjective", def: "Able to be used or obtained.", sen: "Is this seat available?" },
-  { topic: "General", word: "away", pos: "adverb", def: "To another place.", sen: "Go away!" },
-  { topic: "Feelings & Opinions", word: "awesome", pos: "adjective", def: "Very impressive.", sen: "That movie was awesome." },
-  { topic: "Feelings & Opinions", word: "awful", pos: "adjective", def: "Very bad or unpleasant.", sen: "The weather was awful." },
+// ============================================================
+//  SPELLING BEE PREP — WORD LIST
+//  Add or remove words here. Never edit index.html or app.js.
+//
+//  Each word object supports these fields:
+//    word        (required) — the correct British English spelling
+//    pos         (required) — part of speech, e.g. "noun", "verb", "adjective"
+//    meaning     (required) — a clear, concise definition
+//    sentence    (required) — an example sentence using the word
+//    difficulty  (optional) — "easy" | "medium" | "hard"  (default: "medium")
+//    topic       (optional) — category label, e.g. "science", "literature"
+// ============================================================
 
-  
-  { topic: "Names", word: "Betty", pos: "proper noun", def: "A common female given name.", sen: "Betty is practicing her spelling today." },
-  { topic: "Names", word: "David", pos: "proper noun", def: "A common male given name.", sen: "David is the winner of the last round." },
-  { topic: "Names", word: "Sophia", pos: "proper noun", def: "A common female given name.", sen: "Sophia represents her school in the bee." },
-  { topic: "Names", word: "Oliver", pos: "proper noun", def: "A common male given name.", sen: "Oliver spelled the word correctly." },
-
-  
-  { topic: "Clothes & Accessories", word: "blouse", pos: "noun", def: "A shirt-like garment worn by women.", sen: "She wore a white blouse for the ceremony." },
-  { topic: "Clothes & Accessories", word: "trainers", pos: "noun", def: "Sports shoes (US: sneakers).", sen: "He put on his trainers for gym class." },
-  { topic: "Clothes & Accessories", word: "jewellery", pos: "noun", def: "Items like rings and necklaces worn for decoration.", sen: "The shop sells handmade silver jewellery." },
-
-  
-  { topic: "Travel & Transport", word: "ambulance", pos: "noun", def: "A vehicle for taking sick people to hospital.", sen: "The ambulance arrived with its sirens on." },
-  { topic: "Travel & Transport", word: "passenger", pos: "noun", def: "A person traveling in a vehicle.", sen: "The bus passenger waited for their stop." },
-  { topic: "Travel & Transport", word: "journey", pos: "noun", def: "An act of traveling from one place to another.", sen: "It was a long journey across the country." }
+const WORDS = [
+  {
+    word: "acquiesce",
+    pos: "verb",
+    meaning: "To accept something reluctantly but without protest.",
+    sentence: "She decided to acquiesce to her teacher's suggestion and revise her essay.",
+    difficulty: "hard",
+    topic: "behaviour"
+  },
+  {
+    word: "conscientious",
+    pos: "adjective",
+    meaning: "Wishing to do one's work or duty well and thoroughly.",
+    sentence: "The conscientious student double-checked every answer before submitting.",
+    difficulty: "medium",
+    topic: "character"
+  },
+  {
+    word: "ephemeral",
+    pos: "adjective",
+    meaning: "Lasting for a very short time.",
+    sentence: "The beauty of the cherry blossoms is ephemeral, fading within days.",
+    difficulty: "hard",
+    topic: "time"
+  },
+  {
+    word: "liquefy",
+    pos: "verb",
+    meaning: "To make or become liquid.",
+    sentence: "Extreme heat can liquefy metals that are usually solid.",
+    difficulty: "medium",
+    topic: "science"
+  },
+  {
+    word: "miscellaneous",
+    pos: "adjective",
+    meaning: "Of various types or from different sources; assorted.",
+    sentence: "The drawer was full of miscellaneous items with no obvious order.",
+    difficulty: "medium",
+    topic: "general"
+  },
+  {
+    word: "occurrence",
+    pos: "noun",
+    meaning: "An incident or event that takes place.",
+    sentence: "Rainfall in the desert is a rare occurrence.",
+    difficulty: "easy",
+    topic: "general"
+  },
+  {
+    word: "pharaoh",
+    pos: "noun",
+    meaning: "A ruler in ancient Egypt.",
+    sentence: "The pharaoh ordered the construction of a great pyramid.",
+    difficulty: "medium",
+    topic: "history"
+  },
+  {
+    word: "questionnaire",
+    pos: "noun",
+    meaning: "A set of printed or written questions with spaces for answers.",
+    sentence: "Participants were asked to fill in a questionnaire about their habits.",
+    difficulty: "medium",
+    topic: "general"
+  },
+  {
+    word: "supersede",
+    pos: "verb",
+    meaning: "To take the place of something previously in authority or use.",
+    sentence: "Digital cameras largely superseded film cameras in the early 2000s.",
+    difficulty: "hard",
+    topic: "technology"
+  },
+  {
+    word: "threshold",
+    pos: "noun",
+    meaning: "The level or point at which something starts to happen.",
+    sentence: "The noise had reached the threshold at which it became unbearable.",
+    difficulty: "easy",
+    topic: "science"
+  }
 ];
