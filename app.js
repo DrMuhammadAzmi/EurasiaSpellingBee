@@ -1,44 +1,68 @@
-const container = document.getElementById('vocab-container');
+let currentIndex = 0;
+let currentData = [...vocabData]; // Creates a copy of your data array
 
-// Function to build the interactive cards
-function renderVocab(data) {
-  data.forEach((item, index) => {
-    // Create a card for each word
-    const card = document.createElement('div');
-    card.className = 'vocab-card';
+// Function to load a card onto the screen
+function loadCard(index) {
+  const wordObj = currentData[index];
+  
+  // Update Counters & Headers
+  document.getElementById('card-counter').innerText = `${index + 1} of ${currentData.length}`;
+  document.getElementById('bottom-counter').innerText = `${index + 1} / ${currentData.length}`;
+  document.getElementById('card-topic').innerText = wordObj.topic;
+  
+  // Update Word
+  document.getElementById('word-display').innerText = wordObj.word;
 
-    card.innerHTML = `
-      <div class="word-header">
-        <h3>${item.word}</h3>
-        <span class="badge">${item.level}</span>
-      </div>
-      
-      <div class="button-group">
-        <button onclick="toggleInfo('pos-${index}')">Part of Speech</button>
-        <button onclick="toggleInfo('def-${index}')">Definition</button>
-        <button onclick="toggleInfo('sen-${index}')">Sentence</button>
-      </div>
-
-      <div class="info-group">
-        <p id="pos-${index}" class="hidden info-text"><strong>Part of Speech:</strong> ${item.partOfSpeech}</p>
-        <p id="def-${index}" class="hidden info-text"><strong>Definition:</strong> ${item.definition}</p>
-        <p id="sen-${index}" class="hidden info-text"><strong>Example:</strong> <em>"${item.sentence}"</em></p>
-      </div>
-    `;
-    
-    container.appendChild(card);
-  });
+  // Reset the toggle boxes back to default text
+  document.getElementById('box-pos').innerHTML = 'PART OF SPEECH';
+  document.getElementById('box-def').innerHTML = 'DEFINITION';
+  document.getElementById('box-sen').innerHTML = 'SENTENCE';
 }
 
-// Function to toggle the hidden text
-function toggleInfo(elementId) {
-  const element = document.getElementById(elementId);
-  if (element.classList.contains('hidden')) {
-    element.classList.remove('hidden');
-  } else {
-    element.classList.add('hidden');
+// Function to reveal text when a box is clicked
+function reveal(type) {
+  const wordObj = currentData[currentIndex];
+  
+  if (type === 'pos') {
+    document.getElementById('box-pos').innerHTML = `<strong>${wordObj.partOfSpeech}</strong>`;
+  } else if (type === 'def') {
+    document.getElementById('box-def').innerHTML = wordObj.definition;
+  } else if (type === 'sen') {
+    document.getElementById('box-sen').innerHTML = `<em>"${wordObj.sentence}"</em>`;
   }
 }
 
-// Initialize the app
-renderVocab(vocabData);
+// Text-to-Speech Audio (British English)
+function playAudio() {
+  const word = currentData[currentIndex].word;
+  const utterance = new SpeechSynthesisUtterance(word);
+  utterance.lang = 'en-GB'; // Forces British English pronunciation
+  utterance.rate = 0.85; // Slightly slower so students hear it clearly
+  window.speechSynthesis.speak(utterance);
+}
+
+// Navigation Functions
+function nextCard() {
+  if (currentIndex < currentData.length - 1) {
+    currentIndex++;
+    loadCard(currentIndex);
+  } else {
+    alert("You've reached the end of the deck!");
+  }
+}
+
+function prevCard() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    loadCard(currentIndex);
+  }
+}
+
+function shuffleCards() {
+  currentData.sort(() => Math.random() - 0.5);
+  currentIndex = 0;
+  loadCard(currentIndex);
+}
+
+// Initialize the first card when the page loads
+loadCard(currentIndex);
