@@ -445,8 +445,293 @@
     <button class="btn-restart" onclick="restartDeck()">Shuffle &amp; restart</button>
   </div>
 
-  <!-- External Scripts for Data and Logic -->
-  <script src="data.js"></script>
-  <script src="app.js"></script>
+  <!-- Javascript Logic and Data -->
+  <script>
+    // ============================================================
+    //  YOUR WORD LIST — Add new words directly into this array!
+    // ============================================================
+    const WORDS = [
+      {
+        word: "acquiesce",
+        pos: "verb",
+        meaning: "To accept something reluctantly but without protest.",
+        sentence: "She decided to acquiesce to her teacher's suggestion and revise her essay.",
+        difficulty: "hard",
+        topic: "behaviour"
+      },
+      {
+        word: "conscientious",
+        pos: "adjective",
+        meaning: "Wishing to do one's work or duty well and thoroughly.",
+        sentence: "The conscientious student double-checked every answer before submitting.",
+        difficulty: "medium",
+        topic: "character"
+      },
+      {
+        word: "ephemeral",
+        pos: "adjective",
+        meaning: "Lasting for a very short time.",
+        sentence: "The beauty of the cherry blossoms is ephemeral, fading within days.",
+        difficulty: "hard",
+        topic: "time"
+      },
+      {
+        word: "liquefy",
+        pos: "verb",
+        meaning: "To make or become liquid.",
+        sentence: "Extreme heat can liquefy metals that are usually solid.",
+        difficulty: "medium",
+        topic: "science"
+      },
+      {
+        word: "miscellaneous",
+        pos: "adjective",
+        meaning: "Of various types or from different sources; assorted.",
+        sentence: "The drawer was full of miscellaneous items with no obvious order.",
+        difficulty: "medium",
+        topic: "general"
+      },
+      {
+        word: "actually",
+        pos: "adverb",
+        meaning: "Used to emphasize a fact.",
+        sentence: "I actually finished early.",
+        difficulty: "easy",
+        topic: "general"
+      },
+      { 
+        word: "a/an", 
+        pos: "det", 
+        meaning: "Used before a noun to refer to one thing.", 
+        sentence: "I saw a cat in the garden.", 
+        difficulty: "easy", 
+        topic: "grammar" 
+      }
+    ];
+
+    // ============================================================
+    //  APP LOGIC
+    // ============================================================
+    
+    // ── State ──────────────────────────────────────────────────
+    let deck = [];
+    let current = 0;
+    let revealed = false;
+    let filterTopic = "all";
+    let filterDifficulty = "all";
+
+    // ── DOM refs helper ────────────────────────────────────────
+    const $ = id => document.getElementById(id);
+
+    // ── Build topic & difficulty filters ───────────────────────
+    function buildFilters() {
+      const topicFilter = $("topic-filter");
+      const difficultyFilter = $("difficulty-filter");
+
+      // Extract unique topics from WORDS
+      const topics = [...new Set(WORDS.map(w => w.topic).filter(Boolean))].sort();
+      topics.forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t;
+        opt.textContent = t.charAt(0).toUpperCase() + t.slice(1);
+        topicFilter.appendChild(opt);
+      });
+
+      // Extract unique difficulties from WORDS
+      const difficulties = [...new Set(WORDS.map(w => w.difficulty).filter(Boolean))].sort();
+      difficulties.forEach(d => {
+        const opt = document.createElement("option");
+        opt.value = d;
+        opt.textContent = d.charAt(0).toUpperCase() + d.slice(1);
+        difficultyFilter.appendChild(opt);
+      });
+    }
+
+    // ── Shuffle (Fisher-Yates) ─────────────────────────────────
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    // ── Load / filter deck ─────────────────────────────────────
+    function loadDeck() {
+      const source = WORDS.filter(w => {
+        const matchTopic = filterTopic === "all" ? true : w.topic === filterTopic;
+        // If a word has no difficulty set, treat it as "medium" by default
+        const wDiff = w.difficulty || "medium";
+        const matchDiff = filterDifficulty === "all" ? true : wDiff === filterDifficulty;
+        return matchTopic && matchDiff;
+      });
+      deck = shuffle(source);
+      current = 0;
+      renderCard();
+    }
+
+    // ── Render current card ────────────────────────────────────
+    function renderCard() {
+      const counterEl = $("counter");
+      const topicBadge = $("topic-badge");
+      const progressBar = $("progress-bar");
+      const revealBox = $("reveal-box");
+      const revealWord = $("reveal-word");
+      const cardArea = $("card-area");
+
+      if (!deck.length) {
+        counterEl.textContent = "No words";
+        topicBadge.style.display = "none";
+        cardArea.style.display = "none";
+        progressBar.style.width = "0%";
+        return;
+      } else {
+        cardArea.style.display = "flex";
+      }
+      
+      const w = deck[current];
+      revealed = false;
+
+      // Counter & progress
+      counterEl.textContent = `${current + 1} / ${deck.length}`;
+      progressBar.style.width = `${((current + 1) / deck.length) * 100}%`;
+
+      // Topic & Difficulty badge
+      if (w.topic || w.difficulty) {
+        const tText = w.topic ? w.topic.charAt(0).toUpperCase() + w.topic.slice(1) : "Unknown";
+        const diffStr = w.difficulty || "medium";
+        const dText = diffStr.charAt(0).toUpperCase() + diffStr.slice(1);
+        topicBadge.textContent = `${tText} • ${dText}`;
+        topicBadge.style.display = "inline-block";
+      } else {
+        topicBadge.style.display = "none";
+      }
+
+      // Info panels — reset to icon-only state
+      collapseInfo();
+
+      // Reveal box — reset
+      revealBox.classList.remove("revealed");
+      revealWord.textContent = "";
+      revealBox.querySelector(".reveal-hint").style.display = "flex";
+      revealWord.style.display = "none";
+    }
+
+    function collapseInfo() {
+      ["pos", "meaning", "sentence"].forEach(key => {
+        const panel = $(key + "-panel");
+        if(panel) panel.classList.remove("open");
+      });
+      if($("pos-value")) $("pos-value").textContent = "";
+      if($("meaning-value")) $("meaning-value").textContent = "";
+      if($("sentence-value")) $("sentence-value").textContent = "";
+    }
+
+    // ── Toggle info panels ─────────────────────────────────────
+    function togglePanel(key) {
+      const panel = $(key + "-panel");
+      const valEl = $(key + "-value");
+      const w = deck[current];
+      if (!w || !panel || !valEl) return;
+
+      if (panel.classList.contains("open")) {
+        panel.classList.remove("open");
+        valEl.textContent = "";
+      } else {
+        panel.classList.add("open");
+        if (key === "pos") valEl.innerHTML = `<strong>${w.pos}</strong>`;
+        if (key === "meaning") valEl.innerHTML = w.meaning;
+        if (key === "sentence") valEl.innerHTML = `<em>"${w.sentence}"</em>`;
+      }
+    }
+
+    // ── Reveal spelling ────────────────────────────────────────
+    function revealSpelling() {
+      if (revealed) return;
+      revealed = true;
+      const w = deck[current];
+      const revealBox = $("reveal-box");
+      const revealWord = $("reveal-word");
+
+      revealBox.classList.add("revealed");
+      revealBox.querySelector(".reveal-hint").style.display = "none";
+      revealWord.style.display = "block";
+      revealWord.textContent = w.word;
+    }
+
+    // ── Speech ─────────────────────────────────────────────────
+    function speak(rate) {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const w = deck[current];
+      if (!w) return;
+      const utter = new SpeechSynthesisUtterance(w.word);
+      utter.lang = "en-GB";
+      utter.rate = rate;
+
+      // Prefer a British English voice if available
+      const voices = window.speechSynthesis.getVoices();
+      const gbVoice = voices.find(v => v.lang === "en-GB") || null;
+      if (gbVoice) utter.voice = gbVoice;
+
+      window.speechSynthesis.speak(utter);
+    }
+
+    function listenNormal() { speak(1.0); }
+    function listenSlow() { speak(0.6); }
+
+    // ── Mark correct / incorrect ───────────────────────────────
+    function markResult(correct) {
+      const btnId = correct ? "btn-correct" : "btn-incorrect";
+      const btn = $(btnId);
+      if (btn) {
+        btn.classList.add("flash");
+        setTimeout(() => btn.classList.remove("flash"), 400);
+      }
+
+      setTimeout(() => {
+        if (current < deck.length - 1) {
+          current++;
+          renderCard();
+        } else {
+          showFinish();
+        }
+      }, 350);
+    }
+
+    // ── Finish screen ──────────────────────────────────────────
+    function showFinish() {
+      $("card-area").style.display = "none";
+      $("finish-screen").style.display = "flex";
+    }
+
+    function restartDeck() {
+      $("finish-screen").style.display = "none";
+      $("card-area").style.display = "flex";
+      loadDeck();
+    }
+
+    // ── Init ───────────────────────────────────────────────────
+    function init() {
+      buildFilters();
+
+      // Attach Event Listeners to dropdowns
+      $("topic-filter").addEventListener("change", (e) => {
+        filterTopic = e.target.value;
+        loadDeck();
+      });
+
+      $("difficulty-filter").addEventListener("change", (e) => {
+        filterDifficulty = e.target.value;
+        loadDeck();
+      });
+
+      loadDeck();
+    }
+
+    // Load everything once the DOM is ready
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
 </body>
 </html>
