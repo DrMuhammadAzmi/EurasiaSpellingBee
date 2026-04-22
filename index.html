@@ -1,3 +1,15 @@
+<!-- 
+=========================================================
+                    1. INDEX.HTML 
+========================================================= 
+Instructions for GitHub: 
+Copy everything from <!DOCTYPE html> down to the </html>. 
+However, delete the entire <script>...</script> block at 
+the bottom and replace it with these two lines:
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+========================================================= 
+-->
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
@@ -119,7 +131,12 @@
       display: none;
     }
 
-    select#topic-filter {
+    .meta-right {
+      display: flex;
+      gap: 6px;
+    }
+
+    select.filter-dropdown {
       font-family: 'Nunito', sans-serif;
       font-size: 12px;
       font-weight: 700;
@@ -302,16 +319,10 @@
     .btn-result:active { transform: scale(.97); }
     .btn-result.flash { opacity: .5; transform: scale(.95); }
 
-    #btn-incorrect {
-      background: var(--red-light);
-      color: var(--red);
-    }
+    #btn-incorrect { background: var(--red-light); color: var(--red); }
     #btn-incorrect:hover { background: #FEE2E2; }
 
-    #btn-correct {
-      background: var(--green-light);
-      color: var(--green);
-    }
+    #btn-correct { background: var(--green-light); color: var(--green); }
     #btn-correct:hover { background: #DCFCE7; }
 
     /* ── Finish screen ────────────────────────────────────── */
@@ -372,26 +383,17 @@
       <span id="counter">— / —</span>
       <span id="topic-badge"></span>
     </div>
-    <select id="topic-filter">
-      <option value="all">All topics</option>
-    </select>
-  </div>
-
-  
-    <!-- 🛑 NEW: Difficulty & Topic Filters 🛑 -->
+    
     <div class="meta-right">
-      <select id="topic-filter" class="filter-dropdown" onchange="applyFilters()">
+      <select id="topic-filter" class="filter-dropdown">
         <option value="all">All topics</option>
       </select>
-      <select id="difficulty-filter" class="filter-dropdown" onchange="applyFilters()">
+      <select id="difficulty-filter" class="filter-dropdown">
         <option value="all">All levels</option>
       </select>
     </div>
   </div>
 
-
-
-  
   <!-- Card area -->
   <div id="card-area">
 
@@ -452,8 +454,4 @@
     <button class="btn-restart" onclick="restartDeck()">Shuffle &amp; restart</button>
   </div>
 
-  <!-- Data first, then app logic -->
-  <script src="data.js"></script>
-  <script src="app.js"></script>
-</body>
-</html>
+  <script>
