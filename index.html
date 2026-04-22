@@ -1,8 +1,3 @@
-<!-- 
-=========================================================
-                    INDEX.HTML 
-========================================================= 
--->
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
@@ -109,6 +104,8 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px 16px 0;
+      flex-wrap: wrap;
+      gap: 8px;
     }
     .meta-left { display: flex; align-items: center; gap: 8px; }
     #counter { font-size: 13px; font-weight: 700; color: var(--gray-400); }
@@ -252,6 +249,7 @@
     .info-panel.open .info-value {
       max-height: 200px;
       opacity: 1;
+      margin-top: 8px;
     }
 
     /* ── Reveal box ───────────────────────────────────────── */
@@ -447,8 +445,7 @@
     <button class="btn-restart" onclick="restartDeck()">Shuffle &amp; restart</button>
   </div>
 
-  <script>
-
+  <!-- External Scripts for Data and Logic -->
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
